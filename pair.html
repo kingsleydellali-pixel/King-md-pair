@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pair with Code — KING XD V6</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a0f; color: #e0e0e0; min-height: 100vh; display: flex; justify-content: center; align-items: center; }
+    .card { background: linear-gradient(145deg, #12121a, #1a1a2e); padding: 50px; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.8); border: 1px solid #2a2a4a; width: 100%; max-width: 450px; }
+    h2 { background: linear-gradient(90deg, #8b5cf6, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+    p { color: #8888aa; font-size: 13px; margin-bottom: 25px; }
+    input { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid #2a2a4a; background: #0a0a0f; color: #e0e0e0; font-size: 15px; margin-bottom: 20px; outline: none; }
+    input:focus { border-color: #8b5cf6; }
+    button { width: 100%; padding: 15px; border-radius: 10px; border: none; background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: white; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+    button:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(139,92,246,0.4); }
+    .result { margin-top: 25px; padding: 20px; border-radius: 10px; background: #0a0a0f; border: 1px solid #2a2a4a; display: none; }
+    .code { font-size: 32px; letter-spacing: 8px; color: #22c55e; font-weight: bold; text-align: center; }
+    .session { font-size: 12px; color: #8888aa; margin-top: 15px; word-break: break-all; }
+    a.back { display: inline-block; margin-top: 20px; color: #8b5cf6; text-decoration: none; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>📱 Pair with Code</h2>
+    <p>Enter your WhatsApp number with country code (no +)</p>
+    <input id="phone" placeholder="e.g. 233245529834" />
+    <button onclick="generate()">Get Pairing Code</button>
+    <div class="result" id="result">
+      <p style="color:#8888aa; font-size:12px; text-align:center;">Your Pairing Code</p>
+      <div class="code" id="code"></div>
+      <div class="session" id="session"></div>
+    </div>
+    <a href="/" class="back">← Back to Home</a>
+  </div>
+
+  <script>
+    async function generate() {
+      const phone = document.getElementById('phone').value.trim();
+      if (!phone) return alert('Enter your phone number');
+      document.querySelector('button').innerText = 'Generating...';
+      try {
+        const res = await fetch('/pair/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone })
+        });
+        const data = await res.json();
+        if (data.success) {
+          document.getElementById('code').innerText = data.code;
+          document.getElementById('session').innerText = 'Session ID: ' + data.sessionId;
+          document.getElementById('result').style.display = 'block';
+        } else {
+          alert('Error: ' + data.error);
+        }
+      } catch (e) { alert('Failed: ' + e.message); }
+      document.querySelector('button').innerText = 'Get Pairing Code';
+    }
+  </script>
+</body>
+</html>
