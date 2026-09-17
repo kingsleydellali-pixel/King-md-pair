@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: king-xd-v6-pairing
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 3000
+      - key: MEGA_EMAIL
+        sync: true
+      - key: MEGA_PASSWORD
+        sync: true
+      - key: SESSION_PREFIX
+        value: KING-XD-V6~
+    healthCheckPath: /health
